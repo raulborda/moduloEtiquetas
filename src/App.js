@@ -1,24 +1,34 @@
-import logo from './logo.svg';
+import { useState } from 'react';
+import { GlobalContext } from "./components/context/GlobalContext";
+import esES from "antd/lib/locale/es_ES";
 import './App.css';
+import { ConfigProvider } from 'antd';
+import TablaEtiquetas from './components/etiquetas/TablaEtiquetas';
 
 function App() {
+
+  //const idU = localStorage.getItem("usuario");
+  const idU = 1;
+  const [idUsu, setUsu] = useState(idU);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <GlobalContext.Provider
+      value={{
+        idUsu,
+        setUsu,
+      }}
+    >
+      <ConfigProvider
+        locale={esES}
+        theme={{
+          token: {
+            colorPrimary: "#56b43c",
+          },
+        }}
+      >
+        <TablaEtiquetas/>
+      </ConfigProvider>
+    </GlobalContext.Provider>
   );
 }
 
