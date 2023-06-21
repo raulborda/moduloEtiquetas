@@ -1,6 +1,7 @@
 import React from "react";
 import "./Style.css";
-import { Divider, Table, Space, Tag } from "antd";
+import { Divider, Table, Space, Tag, Button } from "antd";
+import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 
 const TablaEtiquetas = () => {
   const columns = [
@@ -41,8 +42,8 @@ const TablaEtiquetas = () => {
       align: "center",
       render: (_, record) => (
         <Space size="middle">
-          <a>Editar</a>
-          <a>Eliminar</a>
+          <EditOutlined style={{color:"#56b43c"}} onClick={() => console.log("Editar " + (record.key) +" "+ (record.etiqueta))}/>
+          <DeleteOutlined style={{color:"red"}} onClick={() => console.log("Eliminar " + (record.key) +" "+ (record.etiqueta))}/>
         </Space>
       ),
     },
@@ -77,6 +78,13 @@ const TablaEtiquetas = () => {
         }}
       >
         <h1 className="titulos">ETIQUETAS</h1>
+        <Button
+              type="primary"
+              style={{ width: "110px", padding: "0px", marginLeft: "10px" }}
+              onClick={() => console.log("Open drawer new")}
+            >
+              Nueva Etiqueta
+            </Button>
       </div>
       <Divider style={{ marginTop: "-5px" }} />
       <Table columns={columns} dataSource={data} />
