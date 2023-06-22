@@ -5,8 +5,17 @@ import { CheckOutlined } from "@ant-design/icons";
 import "./Style.css";
 
 const NuevaEtiqueta = () => {
-  const { idUsu, isDrawerNE, setIsDrawerNE, infoEtiquetas, setInfoEtiquetas, colorPicker, setColorPicker, colorError, setColorError} =
-    useContext(GlobalContext);
+  const {
+    idUsu,
+    isDrawerNE,
+    setIsDrawerNE,
+    infoEtiquetas,
+    setInfoEtiquetas,
+    colorPicker,
+    setColorPicker,
+    colorError,
+    setColorError,
+  } = useContext(GlobalContext);
 
   const [form] = Form.useForm();
 
@@ -75,12 +84,6 @@ const NuevaEtiqueta = () => {
 
     console.log("Nombre Etiqueta: ", nameEt, " | Color: ", colorEt);
 
-    // newEtiquetaResolver({
-    //   variables: {
-    //     etiquetaInput: { etq_nombre: nameEt, etq_color: colorEt, modori_id: 3 },
-    //   },
-    // });
-
     setColorPicker("");
     form.resetFields();
     nameEt = "";
@@ -97,20 +100,18 @@ const NuevaEtiqueta = () => {
         >
           <Row>
             <Col xs={19}>
-                <Form.Item
-                    name="select_modulo"
-                    label="Módulo"
-                    rules={[
-                        {
-                          required: true,
-                          message: "Debe seleccionar un módulo.",
-                        },
-                      ]}
-                >
-                    <Select>
-
-                    </Select>
-                </Form.Item>
+              <Form.Item
+                name="select_modulo"
+                label="Módulo"
+                rules={[
+                  {
+                    required: true,
+                    message: "Debe seleccionar un módulo.",
+                  },
+                ]}
+              >
+                <Select></Select>
+              </Form.Item>
             </Col>
           </Row>
           <Row gutter={[8, 8]} align="bottom">
@@ -124,6 +125,7 @@ const NuevaEtiqueta = () => {
                     message: "Debe ingresar nombre de etiqueta.",
                   },
                 ]}
+                style={{marginTop:"10px", marginBottom:"-5px"}}
               >
                 <div
                   className="tag_wrapper"
@@ -131,9 +133,9 @@ const NuevaEtiqueta = () => {
                     background: colorPicker,
                     width: 280,
                     border: "1px solid #e8e8e8",
-                    borderRadius:"4px"
+                    borderRadius: "4px",
                   }}
-                >                
+                >
                   <Input
                     placeholder=""
                     defaultValue={""}
@@ -147,14 +149,14 @@ const NuevaEtiqueta = () => {
                 </div>
               </Form.Item>
             </Col>
-            <Col xs={5}>
+            {/* <Col xs={5}>
               <Button
                 type="link"
                 htmlType="submit"
                 icon={<CheckOutlined />}
                 style={{ marginBottom: 24, marginLeft: 41 }}
               ></Button>
-            </Col>
+            </Col> */}
           </Row>
           <Row gutter={[8, 8]} align="bottom">
             <Col xs={19}>
@@ -188,9 +190,15 @@ const NuevaEtiqueta = () => {
               </Form.Item>
             </Col>
           </Row>
-          {/* <Row gutter={[8, 8]} align="bottom">
-                  <div className="error-message">{colorError}</div>
-                </Row> */}
+          <Row>
+            <Button
+              type="primary"
+              htmlType="submit"
+              style={{ marginTop: "180px", width:"400px"}}
+            >
+              GUARDAR
+            </Button>
+          </Row>
         </Form>
       </div>
     </>
