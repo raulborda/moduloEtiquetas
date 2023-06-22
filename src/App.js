@@ -24,6 +24,9 @@ function App() {
   const [selectedModulo, setSelectedModulo] = useState(null);
   const [coloresNoUsados, setColoresNoUsados] = useState([]);
 
+  //para forzar limpieza de select en nueva etiqueta
+  const [limpieza, setLimpieza] = useState(false);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -35,6 +38,7 @@ function App() {
         colorError, setColorError,
         selectedModulo, setSelectedModulo,
         coloresNoUsados, setColoresNoUsados,
+        limpieza, setLimpieza,
       }}
     >
       <ConfigProvider

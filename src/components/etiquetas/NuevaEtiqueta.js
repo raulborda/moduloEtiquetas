@@ -16,6 +16,8 @@ const NuevaEtiqueta = () => {
     setSelectedModulo,
     coloresNoUsados,
     setColoresNoUsados,
+    limpieza,
+    setLimpieza,
   } = useContext(GlobalContext);
 
   const [form] = Form.useForm();
@@ -85,6 +87,8 @@ const NuevaEtiqueta = () => {
     form.resetFields();
     nameEt = "";
     setIsDrawerNE(false);
+    setSelectedModulo(null);
+    setColoresNoUsados([]);
   };
 
   const modulos = infoEtiquetas.reduce((acc, modulo) => {
@@ -113,6 +117,11 @@ const NuevaEtiqueta = () => {
       //   console.log("coloresNoUsados: ", coloresNoUsadosParaModulo);
     }
   }, [selectedModulo, infoEtiquetas]);
+
+  useEffect(() => {
+    form.resetFields();
+  }, [limpieza])
+  
 
   return (
     <>

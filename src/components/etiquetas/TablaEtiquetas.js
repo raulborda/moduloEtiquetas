@@ -22,6 +22,8 @@ const TablaEtiquetas = () => {
     setColorError,
     setSelectedModulo,
     setColoresNoUsados,
+    limpieza,
+    setLimpieza,
   } = useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -36,6 +38,7 @@ const TablaEtiquetas = () => {
     setColorError(null);
     setSelectedModulo(null);
     setColoresNoUsados([]);
+    setLimpieza(!limpieza);
   };
 
   const showDrawerEE = (record) => {
@@ -97,10 +100,13 @@ const TablaEtiquetas = () => {
       key: "etiqueta",
       render: (text, record) => (
         <>
-          <Tag color={record.etq_color} key={text} style={{ fontWeight: "bold" }}>
+          <Tag
+            color={record.etq_color}
+            key={text}
+            style={{ fontWeight: "bold" }}
+          >
             {text.toUpperCase()}
           </Tag>
-          
         </>
       ),
     },
@@ -113,10 +119,13 @@ const TablaEtiquetas = () => {
       onFilter: (value, record) => record.modulo === value,
       render: (text, record) => (
         <>
-          <Tag color={record.modori_color} key={text} style={{ fontWeight: "bold" }}>
+          <Tag
+            color={record.modori_color}
+            key={text}
+            style={{ fontWeight: "bold" }}
+          >
             {text.toUpperCase()}
           </Tag>
-          
         </>
       ),
     },
@@ -145,7 +154,7 @@ const TablaEtiquetas = () => {
     etiqueta: c.etq_nombre.toUpperCase(),
     modulo: c.modori_desc.toUpperCase(),
     etq_color: c.etq_color,
-    modori_color:c.modori_color,
+    modori_color: c.modori_color,
   }));
 
   return (
