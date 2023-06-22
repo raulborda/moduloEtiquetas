@@ -1,5 +1,5 @@
-/* eslint-disable array-callback-return */
-import React, { useContext } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import "./Style.css";
@@ -12,6 +12,10 @@ const NuevaEtiqueta = () => {
     colorError,
     setColorError,
     setIsDrawerNE,
+    selectedModulo,
+    setSelectedModulo,
+    coloresNoUsados,
+    setColoresNoUsados,
   } = useContext(GlobalContext);
 
   const [form] = Form.useForm();
@@ -49,27 +53,6 @@ const NuevaEtiqueta = () => {
     "#FDBC57",
   ];
 
-  var coloresUsados = [];
-
-  infoEtiquetas.map((tag) => {
-    const { etq_color } = tag;
-    coloresUsados.push(etq_color);
-  });
-
-  const coloresNoUsados = colors.filter(
-    (value) => !coloresUsados.includes(value)
-  );
-
-  const modulos = infoEtiquetas.reduce((acc, modulo) => {
-    const { modori_id, modori_desc } = modulo;
-    if (!acc.find((item) => item.value === modori_id)) {
-      acc.push({ value: modori_id, label: modori_desc });
-    }
-    return acc;
-  }, []);
-
-  //console.log(modulos);
-
   const handleColorChange = (color) => {
     setColorPicker(color);
     setColorError(null);
@@ -89,13 +72,47 @@ const NuevaEtiqueta = () => {
     }
     var colorEt = colorPicker;
 
-    console.log("Nombre Etiqueta: ", nameEt, " | Color: ", colorEt, " | Módulo: ", selectEt);
+    console.log(
+      "Nombre Etiqueta: ",
+      nameEt,
+      " | Color: ",
+      colorEt,
+      " | Módulo: ",
+      selectEt
+    );
 
     setColorPicker("");
     form.resetFields();
     nameEt = "";
     setIsDrawerNE(false);
   };
+
+  const modulos = infoEtiquetas.reduce((acc, modulo) => {
+    const { modori_id, modori_desc } = modulo;
+    if (!acc.find((item) => item.value === modori_id)) {
+      acc.push({ value: modori_id, label: modori_desc });
+    }
+    return acc;
+  }, []);
+
+  const handleModuloChange = (value) => {
+    setSelectedModulo(value);
+  };
+
+  useEffect(() => {
+    if (selectedModulo && infoEtiquetas.length > 0) {
+      const coloresUsadosParaModulo = infoEtiquetas
+        .filter((tag) => tag.modori_id === selectedModulo)
+        .map((tag) => tag.etq_color);
+      const coloresNoUsadosParaModulo = colors.filter(
+        (color) => !coloresUsadosParaModulo.includes(color)
+      );
+      setColoresNoUsados(coloresNoUsadosParaModulo);
+
+      //   console.log("coloresUsados: ", coloresUsadosParaModulo);
+      //   console.log("coloresNoUsados: ", coloresNoUsadosParaModulo);
+    }
+  }, [selectedModulo, infoEtiquetas]);
 
   return (
     <>
@@ -118,7 +135,10 @@ const NuevaEtiqueta = () => {
                   },
                 ]}
               >
-                <Select>
+                <Select onChange={handleModuloChange} defaultValue="default">
+                  <Select.Option value="default" disabled>
+                    SELECCIONE MODULO
+                  </Select.Option>
                   {modulos.map((modulo) => (
                     <Select.Option key={modulo.value} value={modulo.value}>
                       {modulo.label}
@@ -151,7 +171,7 @@ const NuevaEtiqueta = () => {
                   }}
                 >
                   <Input
-                    placeholder=""
+                    placeholder="INGRESE UN NOMBRE"
                     defaultValue={""}
                     style={{
                       background: "transparent",

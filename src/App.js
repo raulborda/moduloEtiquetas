@@ -21,6 +21,8 @@ function App() {
   //States de Nueva Etiqueta
   const [colorPicker, setColorPicker] = useState("");
   const [colorError, setColorError] = useState(null);
+  const [selectedModulo, setSelectedModulo] = useState(null);
+  const [coloresNoUsados, setColoresNoUsados] = useState([]);
 
   return (
     <GlobalContext.Provider
@@ -31,6 +33,8 @@ function App() {
         infoEtiquetas, setInfoEtiquetas,
         colorPicker, setColorPicker,
         colorError, setColorError,
+        selectedModulo, setSelectedModulo,
+        coloresNoUsados, setColoresNoUsados,
       }}
     >
       <ConfigProvider

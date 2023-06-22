@@ -20,6 +20,8 @@ const TablaEtiquetas = () => {
     setInfoEtiquetas,
     setColorPicker,
     setColorError,
+    setSelectedModulo,
+    setColoresNoUsados,
   } = useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -32,6 +34,8 @@ const TablaEtiquetas = () => {
     setIsDrawerNE(false);
     setColorPicker("");
     setColorError(null);
+    setSelectedModulo(null);
+    setColoresNoUsados([]);
   };
 
   const showDrawerEE = (record) => {
