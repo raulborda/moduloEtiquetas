@@ -17,6 +17,8 @@ const TablaEtiquetas = () => {
     setIsDrawerEE,
     infoEtiquetas,
     setInfoEtiquetas,
+    setColorPicker,
+    setColorError,
   } = useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +29,8 @@ const TablaEtiquetas = () => {
 
   const closeDrawerNE = () => {
     setIsDrawerNE(false);
+    setColorPicker("");
+    setColorError(null);
   };
 
   const showDrawerEE = (record) => {

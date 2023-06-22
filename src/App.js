@@ -18,6 +18,10 @@ function App() {
   //State Info tabla etiquetas
   const [infoEtiquetas, setInfoEtiquetas] = useState([]);
 
+  //States de Nueva Etiqueta
+  const [colorPicker, setColorPicker] = useState("");
+  const [colorError, setColorError] = useState(null);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -25,6 +29,8 @@ function App() {
         isDrawerNE, setIsDrawerNE,
         isDrawerEE, setIsDrawerEE,
         infoEtiquetas, setInfoEtiquetas,
+        colorPicker, setColorPicker,
+        colorError, setColorError,
       }}
     >
       <ConfigProvider
