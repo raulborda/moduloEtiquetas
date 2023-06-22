@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Button, Col, Form, Input, Row, Select } from "antd";
 import "./Style.css";
@@ -17,7 +17,6 @@ const NuevaEtiqueta = () => {
     coloresNoUsados,
     setColoresNoUsados,
     limpieza,
-    setLimpieza,
   } = useContext(GlobalContext);
 
   const [form] = Form.useForm();
