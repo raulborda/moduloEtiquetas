@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from "react";
 import "./Style.css";
 import { Divider, Table, Space, Tag, Button, Drawer } from "antd";
@@ -77,7 +78,7 @@ const TablaEtiquetas = () => {
     }
   }, [idUsu]);
 
-  console.log(infoEtiquetas);
+  //console.log(infoEtiquetas);
 
   const modulosUnicos = [...new Set(infoEtiquetas.map((c) => c.modori_desc))];
   const moduloFilters = modulosUnicos.map((modulo) => ({

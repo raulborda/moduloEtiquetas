@@ -1,20 +1,17 @@
-import React, { useContext, useState } from "react";
+/* eslint-disable array-callback-return */
+import React, { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Button, Col, Form, Input, Row, Select } from "antd";
-import { CheckOutlined } from "@ant-design/icons";
 import "./Style.css";
 
 const NuevaEtiqueta = () => {
   const {
-    idUsu,
-    isDrawerNE,
-    setIsDrawerNE,
     infoEtiquetas,
-    setInfoEtiquetas,
     colorPicker,
     setColorPicker,
     colorError,
     setColorError,
+    setIsDrawerNE,
   } = useContext(GlobalContext);
 
   const [form] = Form.useForm();
@@ -63,6 +60,16 @@ const NuevaEtiqueta = () => {
     (value) => !coloresUsados.includes(value)
   );
 
+  const modulos = infoEtiquetas.reduce((acc, modulo) => {
+    const { modori_id, modori_desc } = modulo;
+    if (!acc.find((item) => item.value === modori_id)) {
+      acc.push({ value: modori_id, label: modori_desc });
+    }
+    return acc;
+  }, []);
+
+  //console.log(modulos);
+
   const handleColorChange = (color) => {
     setColorPicker(color);
     setColorError(null);
@@ -74,7 +81,7 @@ const NuevaEtiqueta = () => {
       return;
     }
 
-    //setShowNewTag(false);
+    var selectEt = value.select_modulo;
 
     var nameEt = value.new_etq_nombre;
     if (nameEt === "" || nameEt === undefined || nameEt === null) {
@@ -82,11 +89,12 @@ const NuevaEtiqueta = () => {
     }
     var colorEt = colorPicker;
 
-    console.log("Nombre Etiqueta: ", nameEt, " | Color: ", colorEt);
+    console.log("Nombre Etiqueta: ", nameEt, " | Color: ", colorEt, " | Módulo: ", selectEt);
 
     setColorPicker("");
     form.resetFields();
     nameEt = "";
+    setIsDrawerNE(false);
   };
 
   return (
@@ -110,7 +118,13 @@ const NuevaEtiqueta = () => {
                   },
                 ]}
               >
-                <Select></Select>
+                <Select>
+                  {modulos.map((modulo) => (
+                    <Select.Option key={modulo.value} value={modulo.value}>
+                      {modulo.label}
+                    </Select.Option>
+                  ))}
+                </Select>
               </Form.Item>
             </Col>
           </Row>
@@ -125,7 +139,7 @@ const NuevaEtiqueta = () => {
                     message: "Debe ingresar nombre de etiqueta.",
                   },
                 ]}
-                style={{marginTop:"10px", marginBottom:"-5px"}}
+                style={{ marginTop: "10px", marginBottom: "-5px" }}
               >
                 <div
                   className="tag_wrapper"
@@ -194,7 +208,7 @@ const NuevaEtiqueta = () => {
             <Button
               type="primary"
               htmlType="submit"
-              style={{ marginTop: "180px", width:"400px"}}
+              style={{ marginTop: "180px", width: "400px" }}
             >
               GUARDAR
             </Button>
