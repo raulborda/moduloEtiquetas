@@ -11,11 +11,20 @@ function App() {
   const idU = 1;
   const [idUsu, setUsu] = useState(idU);
 
+  //States para Drawers
+  const [isDrawerNE, setIsDrawerNE] = useState(false); // NE = NUEVA ETIQUETA
+  const [isDrawerEE, setIsDrawerEE] = useState(false); // EE = EDITAR ETIQUETA
+
+  //State Info tabla etiquetas
+  const [infoEtiquetas, setInfoEtiquetas] = useState([]);
+
   return (
     <GlobalContext.Provider
       value={{
-        idUsu,
-        setUsu,
+        idUsu,setUsu,
+        isDrawerNE, setIsDrawerNE,
+        isDrawerEE, setIsDrawerEE,
+        infoEtiquetas, setInfoEtiquetas,
       }}
     >
       <ConfigProvider

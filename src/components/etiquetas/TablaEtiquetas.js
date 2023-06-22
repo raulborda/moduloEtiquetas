@@ -1,13 +1,25 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./Style.css";
 import { Divider, Table, Space, Tag, Button, Drawer } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import NuevaEtiqueta from "./NuevaEtiqueta";
 import EditarEtiqueta from "./EditarEtiqueta";
+import { GlobalContext } from "../context/GlobalContext";
 
 const TablaEtiquetas = () => {
-  const [isDrawerNE, setIsDrawerNE] = useState(false); // NE = NUEVA ETIQUETA
-  const [isDrawerEE, setIsDrawerEE] = useState(false); // EE = EDITAR ETIQUETA
+  const URLDOS = process.env.REACT_APP_URL;
+
+  const {
+    idUsu,
+    isDrawerNE,
+    setIsDrawerNE,
+    isDrawerEE,
+    setIsDrawerEE,
+    infoEtiquetas,
+    setInfoEtiquetas,
+  } = useContext(GlobalContext);
+
+  const [isLoading, setIsLoading] = useState(true);
 
   const showDrawerNE = () => {
     setIsDrawerNE(true);
@@ -19,7 +31,7 @@ const TablaEtiquetas = () => {
 
   const showDrawerEE = (record) => {
     setIsDrawerEE(true);
-    console.log("Editar " + record.key + " " + record.etiqueta)
+    console.log("Editar " + record.key + " " + record.etiqueta);
   };
 
   const closeDrawerEE = () => {
@@ -38,38 +50,67 @@ const TablaEtiquetas = () => {
     </div>
   );
 
+  const cargarTablaEtiqueta = () => {
+    setIsLoading(true); // Establecer isLoadingTI en true antes de hacer la solicitud
+    const data = new FormData();
+    data.append("idU", idUsu);
+    fetch(`${URLDOS}tablaEtiquetas.php`, {
+      method: "POST",
+      body: data,
+    }).then(function (response) {
+      response.text().then((resp) => {
+        const data = resp;
+        const objetoData = JSON.parse(data);
+        setInfoEtiquetas(objetoData);
+        setIsLoading(false); // Establecer isLoading en false después de recibir la respuesta
+      });
+    });
+  };
+
+  useEffect(() => {
+    if (idUsu) {
+      cargarTablaEtiqueta();
+    }
+  }, [idUsu]);
+
+  console.log(infoEtiquetas);
+
+  const modulosUnicos = [...new Set(infoEtiquetas.map((c) => c.modori_desc))];
+  const moduloFilters = modulosUnicos.map((modulo) => ({
+    text: modulo,
+    value: modulo,
+  }));
+
   const columns = [
     {
       title: "Etiqueta",
       dataIndex: "etiqueta",
       key: "etiqueta",
-      render: (text) => text,
+      render: (text, record) => (
+        <>
+          <Tag color={record.etq_color} key={text} style={{ fontWeight: "bold" }}>
+            {text.toUpperCase()}
+          </Tag>
+          
+        </>
+      ),
     },
     {
       title: "Módulo",
       dataIndex: "modulo",
       key: "modulo",
+      align: "center",
+      filters: moduloFilters,
+      onFilter: (value, record) => record.modulo === value,
+      render: (text, record) => (
+        <>
+          <Tag color={record.modori_color} key={text} style={{ fontWeight: "bold" }}>
+            {text.toUpperCase()}
+          </Tag>
+          
+        </>
+      ),
     },
-    // {
-    //   title: "Tags",
-    //   key: "tags",
-    //   dataIndex: "tags",
-    //   render: (_, { tags }) => (
-    //     <>
-    //       {tags.map((tag) => {
-    //         let color = tag.length > 5 ? "geekblue" : "green";
-    //         if (tag === "loser") {
-    //           color = "volcano";
-    //         }
-    //         return (
-    //           <Tag color={color} key={tag}>
-    //             {tag.toUpperCase()}
-    //           </Tag>
-    //         );
-    //       })}
-    //     </>
-    //   ),
-    // },
     {
       title: "...",
       key: "action",
@@ -90,24 +131,13 @@ const TablaEtiquetas = () => {
       ),
     },
   ];
-  const data = [
-    {
-      key: "1",
-      etiqueta: "IMPORTANTE",
-      modulo: "NOTAS",
-      //tags: ["nice", "developer"],
-    },
-    {
-      key: "2",
-      etiqueta: "MAIZ",
-      modulo: "NEGOCIOS",
-    },
-    {
-      key: "3",
-      etiqueta: "CONSECUENTE",
-      modulo: "CLIENTES",
-    },
-  ];
+  const data = infoEtiquetas.map((c) => ({
+    key: c.etq_id,
+    etiqueta: c.etq_nombre.toUpperCase(),
+    modulo: c.modori_desc.toUpperCase(),
+    etq_color: c.etq_color,
+    modori_color:c.modori_color,
+  }));
 
   return (
     <div className="div_wrapper">
@@ -128,8 +158,13 @@ const TablaEtiquetas = () => {
           Nueva Etiqueta
         </Button>
       </div>
+
       <Divider style={{ marginTop: "-5px" }} />
+
+      {/* TABLA */}
       <Table columns={columns} dataSource={data} />
+
+      {/* DRAWERS */}
       <Drawer
         title="Nueva Etiqueta"
         open={isDrawerNE}
