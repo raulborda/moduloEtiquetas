@@ -11,7 +11,7 @@ import {
   Spin,
   Popconfirm,
 } from "antd";
-import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
+import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from "@ant-design/icons";
 import NuevaEtiqueta from "./NuevaEtiqueta";
 import EditarEtiqueta from "./EditarEtiqueta";
 import { GlobalContext } from "../context/GlobalContext";
@@ -157,7 +157,7 @@ const TablaEtiquetas = () => {
 
           <Popconfirm
             style={{ width: 200 }}
-            title="¿Deseas eliminar esta nota?"
+            title={<div style={{display:"flex", flexDirection:"column"}}><label>¿Deseas eliminar esta nota?</label><div style={{marginLeft:"-22px"}}><InfoCircleOutlined style={{color:"red", marginRight:"9px"}}/><span style={{color:"red", fontWeight:"500"}}>Si la etiqueta se encuentra asociada a algún objeto se eliminará la asociación</span></div></div>}
             okText="Borrar"
             cancelText="Cerrar"
             onConfirm={() => eliminarEtiqueta(record)}
