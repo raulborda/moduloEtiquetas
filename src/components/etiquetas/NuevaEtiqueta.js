@@ -5,6 +5,8 @@ import { Button, Col, Form, Input, Row, Select } from "antd";
 import "./Style.css";
 
 const NuevaEtiqueta = () => {
+  const URLDOS = process.env.REACT_APP_URL;
+
   const {
     infoEtiquetas,
     colorPicker,
@@ -17,6 +19,8 @@ const NuevaEtiqueta = () => {
     coloresNoUsados,
     setColoresNoUsados,
     limpieza,
+    actualizarData, 
+    setActualizarData,
   } = useContext(GlobalContext);
 
   const [form] = Form.useForm();
@@ -82,10 +86,26 @@ const NuevaEtiqueta = () => {
       selectEt
     );
 
+    //* FUNCION QUE CARGA LOS DATOS DE UNA NUEVA ETIQUETA
+    const data = new FormData();
+    data.append("nombreE", nameEt);
+    data.append("colorE", colorEt);
+    data.append("moduloE", selectEt);
+    fetch(`${URLDOS}nuevaEtiqueta.php`, {
+      method: "POST",
+      body: data,
+    }).then(function (response) {
+      response.text().then((resp) => {
+        const data = resp;
+        console.log(data);
+      });
+    });
+
     setColorPicker("");
     form.resetFields();
     nameEt = "";
     setIsDrawerNE(false);
+    setActualizarData(!actualizarData);
     setSelectedModulo(null);
     setColoresNoUsados([]);
   };
@@ -119,8 +139,7 @@ const NuevaEtiqueta = () => {
 
   useEffect(() => {
     form.resetFields();
-  }, [limpieza])
-  
+  }, [limpieza]);
 
   return (
     <>
@@ -169,26 +188,28 @@ const NuevaEtiqueta = () => {
                 ]}
                 style={{ marginTop: "10px", marginBottom: "-5px" }}
               >
-                <div
-                  className="tag_wrapper"
-                  style={{
-                    background: colorPicker,
-                    width: 280,
-                    border: "1px solid #e8e8e8",
-                    borderRadius: "4px",
-                  }}
-                >
-                  <Input
-                    placeholder="INGRESE UN NOMBRE"
-                    defaultValue={""}
+                <>
+                  <div
+                    className="tag_wrapper"
                     style={{
-                      background: "transparent",
-                      color: "white",
-                      border: "none",
-                      outline: "none",
+                      background: colorPicker,
+                      width: 280,
+                      border: "1px solid #e8e8e8",
+                      borderRadius: "4px",
                     }}
-                  />
-                </div>
+                  >
+                    <Input
+                      placeholder="INGRESE UN NOMBRE"
+                      defaultValue={""}
+                      style={{
+                        background: "transparent",
+                        color: "white",
+                        border: "none",
+                        outline: "none",
+                      }}
+                    />
+                  </div>
+                </>
               </Form.Item>
             </Col>
             {/* <Col xs={5}>

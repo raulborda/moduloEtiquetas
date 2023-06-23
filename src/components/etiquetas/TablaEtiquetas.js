@@ -1,7 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from "react";
 import "./Style.css";
-import { Divider, Table, Space, Tag, Button, Drawer } from "antd";
+import { Divider, Table, Space, Tag, Button, Drawer, Spin } from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import NuevaEtiqueta from "./NuevaEtiqueta";
 import EditarEtiqueta from "./EditarEtiqueta";
@@ -24,6 +24,7 @@ const TablaEtiquetas = () => {
     setColoresNoUsados,
     limpieza,
     setLimpieza,
+    actualizarData,
   } = useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -63,7 +64,6 @@ const TablaEtiquetas = () => {
   );
 
   const cargarTablaEtiqueta = () => {
-    setIsLoading(true); // Establecer isLoadingTI en true antes de hacer la solicitud
     const data = new FormData();
     data.append("idU", idUsu);
     fetch(`${URLDOS}tablaEtiquetas.php`, {
@@ -83,7 +83,7 @@ const TablaEtiquetas = () => {
     if (idUsu) {
       cargarTablaEtiqueta();
     }
-  }, [idUsu]);
+  }, [idUsu, isLoading, actualizarData]);
 
   //console.log(infoEtiquetas);
 
@@ -158,50 +158,66 @@ const TablaEtiquetas = () => {
   }));
 
   return (
-    <div className="div_wrapper">
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          justifyContent: "space-between",
-          width: "100%",
-        }}
-      >
-        <h1 className="titulos">ETIQUETAS</h1>
-        <Button
-          type="primary"
-          style={{ width: "110px", padding: "0px", marginLeft: "10px" }}
-          onClick={showDrawerNE}
+    <>
+      {isLoading ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            marginTop: "10%",
+          }}
         >
-          Nueva Etiqueta
-        </Button>
-      </div>
+          <Spin size="large" />
+        </div>
+      ) : (
+        <div className="div_wrapper">
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-between",
+              width: "100%",
+            }}
+          >
+            <h1 className="titulos">ETIQUETAS</h1>
+            <Button
+              type="primary"
+              style={{ width: "110px", padding: "0px", marginLeft: "10px" }}
+              onClick={showDrawerNE}
+            >
+              Nueva Etiqueta
+            </Button>
+          </div>
 
-      <Divider style={{ marginTop: "-5px" }} />
+          <Divider style={{ marginTop: "-5px" }} />
 
-      {/* TABLA */}
-      <Table columns={columns} dataSource={data} />
+          {/* TABLA */}
+          <Table columns={columns} dataSource={data} />
 
-      {/* DRAWERS */}
-      <Drawer
-        title="Nueva Etiqueta"
-        open={isDrawerNE}
-        onClose={closeDrawerNE}
-        width={400}
-        closeIcon={<CustomCloseIcon />}
-      >
-        <NuevaEtiqueta />
-      </Drawer>
-      <Drawer
-        title="Editar Etiqueta"
-        open={isDrawerEE}
-        onClose={closeDrawerEE}
-        width={400}
-        closeIcon={<CustomCloseIcon />}
-      >
-        <EditarEtiqueta />
-      </Drawer>
-    </div>
+          {/* DRAWERS */}
+          <Drawer
+            title="Nueva Etiqueta"
+            open={isDrawerNE}
+            onClose={closeDrawerNE}
+            width={400}
+            closeIcon={<CustomCloseIcon />}
+          >
+            <NuevaEtiqueta />
+          </Drawer>
+          <Drawer
+            title="Editar Etiqueta"
+            open={isDrawerEE}
+            onClose={closeDrawerEE}
+            width={400}
+            closeIcon={<CustomCloseIcon />}
+          >
+            <EditarEtiqueta />
+          </Drawer>
+        </div>
+      )}
+    </>
   );
 };
 
