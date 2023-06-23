@@ -1,7 +1,16 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useContext, useEffect, useState } from "react";
 import "./Style.css";
-import { Divider, Table, Space, Tag, Button, Drawer, Spin } from "antd";
+import {
+  Divider,
+  Table,
+  Space,
+  Tag,
+  Button,
+  Drawer,
+  Spin,
+  Popconfirm,
+} from "antd";
 import { DeleteOutlined, EditOutlined } from "@ant-design/icons";
 import NuevaEtiqueta from "./NuevaEtiqueta";
 import EditarEtiqueta from "./EditarEtiqueta";
@@ -95,6 +104,10 @@ const TablaEtiquetas = () => {
     value: modulo,
   }));
 
+  const eliminarEtiqueta = (etiqueta) => {
+    console.log("Se elimino etiqueta: ", etiqueta)
+  };
+
   const columns = [
     {
       title: "Etiqueta",
@@ -105,7 +118,7 @@ const TablaEtiquetas = () => {
           <Tag
             color={record.etq_color}
             key={text}
-            style={{ fontWeight: "bold", paddingTop:"2px" }}
+            style={{ fontWeight: "bold", paddingTop: "2px" }}
           >
             {text.toUpperCase()}
           </Tag>
@@ -124,7 +137,7 @@ const TablaEtiquetas = () => {
           <Tag
             color={record.modori_color}
             key={text}
-            style={{ fontWeight: "bold", paddingTop:"2px" }}
+            style={{ fontWeight: "bold", paddingTop: "2px" }}
           >
             {text.toUpperCase()}
           </Tag>
@@ -141,12 +154,19 @@ const TablaEtiquetas = () => {
             style={{ color: "#56b43c" }}
             onClick={() => showDrawerEE(record)}
           />
-          <DeleteOutlined
-            style={{ color: "red" }}
-            onClick={() =>
-              console.log("Eliminar " + record.key + " " + record.etiqueta)
-            }
-          />
+
+          <Popconfirm
+            style={{ width: 200 }}
+            title="¿Deseas eliminar esta nota?"
+            okText="Borrar"
+            cancelText="Cerrar"
+            onConfirm={() => eliminarEtiqueta(record)}
+            placement="left"
+          >
+            <Button type="link">
+              <DeleteOutlined style={{ color: "red" }} />
+            </Button>
+          </Popconfirm>
         </Space>
       ),
     },
