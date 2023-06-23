@@ -31,7 +31,7 @@ function App() {
   const [actualizarData, setActualizarData] = useState(false);
 
   //States de Editar Etiqueta
-  const [infoEditarEtiqueta, setInfoEditarEtiqueta] = useState({});
+  const [infoEditarEtiqueta, setInfoEditarEtiqueta] = useState(null);
 
   return (
     <GlobalContext.Provider

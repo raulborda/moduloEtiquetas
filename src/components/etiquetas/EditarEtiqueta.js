@@ -4,22 +4,18 @@ import { Button, Col, Divider, Form, Input, Row } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 
 const EditarEtiqueta = () => {
-  const { infoEditarEtiqueta, setInfoEditarEtiqueta, setIsDrawerEE } =
+  const { infoEditarEtiqueta, setIsDrawerEE, setInfoEditarEtiqueta } =
     useContext(GlobalContext);
 
   const [form] = Form.useForm();
 
-  console.log("infoEditarEtiqueta: ", infoEditarEtiqueta);
+  //console.log("infoEditarEtiqueta: ", infoEditarEtiqueta);
 
   const onFinish = (value) => {
-    console.log(value);
+    console.log("VALORES A ENVIAR PARA UPDATE: ", infoEditarEtiqueta.key, " | ", value.etq_nombre);
     setIsDrawerEE(false);
     form.resetFields();
-  };
-
-  const cancelEdit = () => {
-    setIsDrawerEE(false);
-    form.resetFields();
+    setInfoEditarEtiqueta(null);
   };
 
   return (
@@ -72,14 +68,12 @@ const EditarEtiqueta = () => {
                     <Button
                       type="link"
                       htmlType="submit"
-                      icon={<CheckOutlined />}
+                      icon={<CheckOutlined style={{color:"#56b43c"}}/>}
                       style={{ marginBottom: 8, marginLeft: 10, marginTop: -4 }}
                     ></Button>
                   </div>
                 </Form.Item>
               </Col>
-              {/* <Col xs={5}>
-              </Col> */}
             </Row>
           </Form>
           {/* <Row gutter={[8, 8]} align="bottom">

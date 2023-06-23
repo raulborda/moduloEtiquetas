@@ -45,12 +45,12 @@ const TablaEtiquetas = () => {
 
   const showDrawerEE = (record) => {
     setIsDrawerEE(true);
-    //console.log("Editar " + record.key + " " + record.etiqueta);
     setInfoEditarEtiqueta(record);
   };
 
   const closeDrawerEE = () => {
     setIsDrawerEE(false);
+    setInfoEditarEtiqueta(null);
   };
 
   const closeIconStyle = {
