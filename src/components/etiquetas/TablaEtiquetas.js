@@ -11,7 +11,11 @@ import {
   Spin,
   Popconfirm,
 } from "antd";
-import { DeleteOutlined, EditOutlined, InfoCircleOutlined } from "@ant-design/icons";
+import {
+  DeleteOutlined,
+  EditOutlined,
+  InfoCircleOutlined,
+} from "@ant-design/icons";
 import NuevaEtiqueta from "./NuevaEtiqueta";
 import EditarEtiqueta from "./EditarEtiqueta";
 import { GlobalContext } from "../context/GlobalContext";
@@ -34,6 +38,7 @@ const TablaEtiquetas = () => {
     limpieza,
     setLimpieza,
     actualizarData,
+    setActualizarData,
     setInfoEditarEtiqueta,
   } = useContext(GlobalContext);
 
@@ -105,7 +110,22 @@ const TablaEtiquetas = () => {
   }));
 
   const eliminarEtiqueta = (etiqueta) => {
-    console.log("Se elimino etiqueta: ", etiqueta)
+    //console.log("Se elimino etiqueta: ", etiqueta);
+    const data = new FormData();
+    data.append("idE", etiqueta.key);
+    data.append("idM", etiqueta.modori_id);
+    fetch(`${URLDOS}eliminarEtiqueta.php`, {
+      method: "POST",
+      body: data,
+    }).then(function (response) {
+      response.text().then((resp) => {
+        const data = resp;
+        console.log(data);
+      });
+    });
+
+    setActualizarData(!actualizarData);
+
   };
 
   const columns = [
@@ -157,7 +177,20 @@ const TablaEtiquetas = () => {
 
           <Popconfirm
             style={{ width: 200 }}
-            title={<div style={{display:"flex", flexDirection:"column"}}><label>¿Deseas eliminar esta nota?</label><div style={{marginLeft:"-22px"}}><InfoCircleOutlined style={{color:"red", marginRight:"9px"}}/><span style={{color:"red", fontWeight:"500"}}>Si la etiqueta se encuentra asociada a algún objeto se eliminará la asociación</span></div></div>}
+            title={
+              <div style={{ display: "flex", flexDirection: "column" }}>
+                <label>¿Deseas eliminar esta nota?</label>
+                <div style={{ marginLeft: "-22px" }}>
+                  <InfoCircleOutlined
+                    style={{ color: "red", marginRight: "9px" }}
+                  />
+                  <span style={{ color: "red", fontWeight: "500" }}>
+                    Si la etiqueta se encuentra asociada a algún objeto se
+                    eliminará la asociación
+                  </span>
+                </div>
+              </div>
+            }
             okText="Borrar"
             cancelText="Cerrar"
             onConfirm={() => eliminarEtiqueta(record)}
@@ -177,6 +210,7 @@ const TablaEtiquetas = () => {
     modulo: c.modori_desc.toUpperCase(),
     etq_color: c.etq_color,
     modori_color: c.modori_color,
+    modori_id:c.modori_id,
   }));
 
   return (
