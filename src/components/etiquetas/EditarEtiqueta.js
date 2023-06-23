@@ -1,21 +1,37 @@
 import React, { useContext } from "react";
 import { GlobalContext } from "../context/GlobalContext";
-import { Button, Col, Divider, Form, Input, Row } from "antd";
+import { Button, Col, Form, Input, Row } from "antd";
 import { CheckOutlined } from "@ant-design/icons";
 
 const EditarEtiqueta = () => {
-  const { infoEditarEtiqueta, setIsDrawerEE, setInfoEditarEtiqueta } =
+  const URLDOS = process.env.REACT_APP_URL;
+
+  const { infoEditarEtiqueta, setIsDrawerEE, setInfoEditarEtiqueta, setActualizarData, actualizarData} =
     useContext(GlobalContext);
 
   const [form] = Form.useForm();
 
-  //console.log("infoEditarEtiqueta: ", infoEditarEtiqueta);
-
   const onFinish = (value) => {
-    console.log("VALORES A ENVIAR PARA UPDATE: ", infoEditarEtiqueta.key, " | ", value.etq_nombre);
+    //console.log("VALORES A ENVIAR PARA UPDATE: ", infoEditarEtiqueta.key, " | ", value.etq_nombre);
+
+    //* FUNCION PARA EDITAR LOS DATOS DE UNA ETIQUETA
+    const data = new FormData();
+    data.append("nombreE", value.etq_nombre);
+    data.append("idE", infoEditarEtiqueta.key);
+    fetch(`${URLDOS}editarEtiqueta.php`, {
+      method: "POST",
+      body: data,
+    }).then(function (response) {
+      response.text().then((resp) => {
+        const data = resp;
+        console.log(data);
+      });
+    });
+
     setIsDrawerEE(false);
     form.resetFields();
     setInfoEditarEtiqueta(null);
+    setActualizarData(!actualizarData);
   };
 
   return (
@@ -60,7 +76,7 @@ const EditarEtiqueta = () => {
                           color: "white",
                           border: "none",
                           outline: "none",
-                          paddingTop:"2px"
+                          paddingTop: "2px",
                         }}
                       />
                     </div>
@@ -68,7 +84,7 @@ const EditarEtiqueta = () => {
                     <Button
                       type="link"
                       htmlType="submit"
-                      icon={<CheckOutlined style={{color:"#56b43c"}}/>}
+                      icon={<CheckOutlined style={{ color: "#56b43c" }} />}
                       style={{ marginBottom: 8, marginLeft: 10, marginTop: -4 }}
                     ></Button>
                   </div>
