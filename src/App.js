@@ -30,6 +30,9 @@ function App() {
   //LOADING para refrescar cuando se crea o edita una etiqueta
   const [actualizarData, setActualizarData] = useState(false);
 
+  //States de Editar Etiqueta
+  const [infoEditarEtiqueta, setInfoEditarEtiqueta] = useState({});
+
   return (
     <GlobalContext.Provider
       value={{
@@ -43,6 +46,7 @@ function App() {
         coloresNoUsados, setColoresNoUsados,
         limpieza, setLimpieza,
         actualizarData, setActualizarData,
+        infoEditarEtiqueta, setInfoEditarEtiqueta,
       }}
     >
       <ConfigProvider

@@ -25,6 +25,7 @@ const TablaEtiquetas = () => {
     limpieza,
     setLimpieza,
     actualizarData,
+    setInfoEditarEtiqueta,
   } = useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
@@ -44,7 +45,8 @@ const TablaEtiquetas = () => {
 
   const showDrawerEE = (record) => {
     setIsDrawerEE(true);
-    console.log("Editar " + record.key + " " + record.etiqueta);
+    //console.log("Editar " + record.key + " " + record.etiqueta);
+    setInfoEditarEtiqueta(record);
   };
 
   const closeDrawerEE = () => {
@@ -103,7 +105,7 @@ const TablaEtiquetas = () => {
           <Tag
             color={record.etq_color}
             key={text}
-            style={{ fontWeight: "bold" }}
+            style={{ fontWeight: "bold", paddingTop:"2px" }}
           >
             {text.toUpperCase()}
           </Tag>
@@ -122,7 +124,7 @@ const TablaEtiquetas = () => {
           <Tag
             color={record.modori_color}
             key={text}
-            style={{ fontWeight: "bold" }}
+            style={{ fontWeight: "bold", paddingTop:"2px" }}
           >
             {text.toUpperCase()}
           </Tag>
@@ -210,7 +212,7 @@ const TablaEtiquetas = () => {
             title="Editar Etiqueta"
             open={isDrawerEE}
             onClose={closeDrawerEE}
-            width={400}
+            width={300}
             closeIcon={<CustomCloseIcon />}
           >
             <EditarEtiqueta />
