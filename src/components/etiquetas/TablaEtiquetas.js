@@ -196,7 +196,7 @@ const TablaEtiquetas = () => {
           <Divider style={{ marginTop: "-5px" }} />
 
           {/* TABLA */}
-          <Table columns={columns} dataSource={data} />
+          <Table columns={columns} dataSource={data} size="small" />
 
           {/* DRAWERS */}
           <Drawer
