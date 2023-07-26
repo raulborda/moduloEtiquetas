@@ -146,6 +146,9 @@ const NuevaEtiqueta = () => {
       ? { marginTop: "200px", marginBottom: "-100px" }
       : { marginTop: "25px", marginBottom: "-5px" };
 
+
+      const buttonStyle = colorError ? { marginTop: "-150px", width: "351px" } : {marginTop: "150px", width: "351px" };
+
   return (
     <>
       <div className="divForm">
@@ -250,23 +253,18 @@ const NuevaEtiqueta = () => {
                 </>
               </Form.Item>
             </Col>
-            {/* <Col xs={5}>
-              <Button
-                type="link"
-                htmlType="submit"
-                icon={<CheckOutlined />}
-                style={{ marginBottom: 24, marginLeft: 41 }}
-              ></Button>
-            </Col> */}
           </Row>
-          <Row>
-            <Button
-              type="primary"
-              htmlType="submit"
-              style={{ marginTop: "140px", width: "400px" }}
-            >
-              GUARDAR
-            </Button>
+          <Row gutter={[8, 8]}>
+            <Col xs={19}>
+              <Button
+                type="primary"
+                htmlType="submit"
+                //style={{ marginTop: "120px", width: "351px" }}
+                style={{ ...buttonStyle }}
+              >
+                GUARDAR
+              </Button>
+            </Col>
           </Row>
         </Form>
       </div>
