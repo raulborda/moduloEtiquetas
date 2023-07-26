@@ -143,11 +143,11 @@ const NuevaEtiqueta = () => {
 
   const style =
     selectedModulo !== null
-      ? { marginTop: "200px", marginBottom: "-100px" }
+      ? { marginTop: "190px", marginBottom: "-75px" }
       : { marginTop: "25px", marginBottom: "-5px" };
 
 
-      const buttonStyle = colorError ? { marginTop: "-100px", width: "351px" } : {marginTop: "50px", width: "351px" };
+      const buttonStyle = colorError ? { marginTop: "-350px !important", width: "351px" } : {marginTop: "100px", width: "351px" };
 
   return (
     <>
@@ -255,7 +255,6 @@ const NuevaEtiqueta = () => {
             </Col>
           </Row>
           <Row gutter={[8, 8]}>
-            <Col xs={19}>
               <Button
                 type="primary"
                 htmlType="submit"
@@ -264,7 +263,6 @@ const NuevaEtiqueta = () => {
               >
                 GUARDAR
               </Button>
-            </Col>
           </Row>
         </Form>
       </div>
