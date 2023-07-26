@@ -141,6 +141,9 @@ const NuevaEtiqueta = () => {
     form.resetFields();
   }, [limpieza]);
 
+
+  const style = selectedModulo !== null ? { marginTop: "200px", marginBottom: "-100px" } : { marginTop: "25px", marginBottom: "-5px" };
+
   return (
     <>
       <div className="divForm">
@@ -181,6 +184,7 @@ const NuevaEtiqueta = () => {
                 name="select_color"
                 validateStatus={colorError ? "error" : ""}
                 help={colorError || ""}
+                style={{ marginTop: "-20px"}}
               >
                 <>
                   <p className="titleP">Seleccione un color:</p>
@@ -218,7 +222,8 @@ const NuevaEtiqueta = () => {
                     message: "Debe ingresar nombre de etiqueta.",
                   },
                 ]}
-                style={{ marginTop: "10px", marginBottom: "-5px" }}
+                style={style}
+                
               >
                 <>
                   <div
