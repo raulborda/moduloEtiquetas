@@ -147,7 +147,7 @@ const NuevaEtiqueta = () => {
       : { marginTop: "25px", marginBottom: "-5px" };
 
 
-      const buttonStyle = colorError ? { marginTop: "-150px", width: "351px" } : {marginTop: "150px", width: "351px" };
+      const buttonStyle = colorError ? { marginTop: "-100px", width: "351px" } : {marginTop: "50px", width: "351px" };
 
   return (
     <>
