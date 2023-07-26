@@ -262,7 +262,7 @@ const NuevaEtiqueta = () => {
             <Button
               type="primary"
               htmlType="submit"
-              style={{ marginTop: "180px", width: "400px" }}
+              style={{ marginTop: "160px", width: "400px" }}
             >
               GUARDAR
             </Button>
