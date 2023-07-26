@@ -178,6 +178,38 @@ const NuevaEtiqueta = () => {
           <Row gutter={[8, 8]} align="bottom">
             <Col xs={19}>
               <Form.Item
+                name="select_color"
+                validateStatus={colorError ? "error" : ""}
+                help={colorError || ""}
+              >
+                <>
+                  <p className="titleP">Seleccione un color:</p>
+                  <div className="custom-color-picker">
+                    <div className="color-picker-panel">
+                      <div className="color-grid">
+                        {coloresNoUsados.map((color) => (
+                          <div
+                            key={color}
+                            className="color-grid-item"
+                            style={{ backgroundColor: color }}
+                            onClick={() => handleColorChange(color)}
+                          />
+                        ))}
+                      </div>
+                      <div className="error-message">{colorError}</div>
+                      <div
+                        className="selected-color"
+                        style={{ backgroundColor: colorPicker }}
+                      />
+                    </div>
+                  </div>
+                </>
+              </Form.Item>
+            </Col>
+          </Row>
+          <Row gutter={[8, 8]} align="bottom">
+            <Col xs={19}>
+              <Form.Item
                 name="new_etq_nombre"
                 label="Nombre"
                 rules={[
@@ -220,39 +252,7 @@ const NuevaEtiqueta = () => {
                 style={{ marginBottom: 24, marginLeft: 41 }}
               ></Button>
             </Col> */}
-          </Row>
-          <Row gutter={[8, 8]} align="bottom">
-            <Col xs={19}>
-              <Form.Item
-                name="select_color"
-                validateStatus={colorError ? "error" : ""}
-                help={colorError || ""}
-              >
-                <>
-                  <p className="titleP">Seleccione un color:</p>
-                  <div className="custom-color-picker">
-                    <div className="color-picker-panel">
-                      <div className="color-grid">
-                        {coloresNoUsados.map((color) => (
-                          <div
-                            key={color}
-                            className="color-grid-item"
-                            style={{ backgroundColor: color }}
-                            onClick={() => handleColorChange(color)}
-                          />
-                        ))}
-                      </div>
-                      <div className="error-message">{colorError}</div>
-                      <div
-                        className="selected-color"
-                        style={{ backgroundColor: colorPicker }}
-                      />
-                    </div>
-                  </div>
-                </>
-              </Form.Item>
-            </Col>
-          </Row>
+          </Row>          
           <Row>
             <Button
               type="primary"
