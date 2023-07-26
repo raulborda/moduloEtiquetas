@@ -19,7 +19,7 @@ const NuevaEtiqueta = () => {
     coloresNoUsados,
     setColoresNoUsados,
     limpieza,
-    actualizarData, 
+    actualizarData,
     setActualizarData,
   } = useContext(GlobalContext);
 
@@ -141,8 +141,10 @@ const NuevaEtiqueta = () => {
     form.resetFields();
   }, [limpieza]);
 
-
-  const style = selectedModulo !== null ? { marginTop: "200px", marginBottom: "-100px" } : { marginTop: "25px", marginBottom: "-5px" };
+  const style =
+    selectedModulo !== null
+      ? { marginTop: "200px", marginBottom: "-100px" }
+      : { marginTop: "25px", marginBottom: "-5px" };
 
   return (
     <>
@@ -184,7 +186,7 @@ const NuevaEtiqueta = () => {
                 name="select_color"
                 validateStatus={colorError ? "error" : ""}
                 help={colorError || ""}
-                style={{ marginTop: "-20px"}}
+                style={{ marginTop: "-20px" }}
               >
                 <>
                   <p className="titleP">Seleccione un color:</p>
@@ -223,7 +225,6 @@ const NuevaEtiqueta = () => {
                   },
                 ]}
                 style={style}
-                
               >
                 <>
                   <div
@@ -257,7 +258,7 @@ const NuevaEtiqueta = () => {
                 style={{ marginBottom: 24, marginLeft: 41 }}
               ></Button>
             </Col> */}
-          </Row>          
+          </Row>
           <Row>
             <Button
               type="primary"
