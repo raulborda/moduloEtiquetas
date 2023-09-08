@@ -2,7 +2,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./Style.css";
 import {
-  Divider,
   Table,
   Space,
   Tag,
@@ -89,6 +88,7 @@ const TablaEtiquetas = () => {
       response.text().then((resp) => {
         const data = resp;
         const objetoData = JSON.parse(data);
+
         setInfoEtiquetas(objetoData);
         setIsLoading(false); // Establecer isLoading en false después de recibir la respuesta
       });
@@ -100,8 +100,6 @@ const TablaEtiquetas = () => {
       cargarTablaEtiqueta();
     }
   }, [idUsu, isLoading, actualizarData]);
-
-  //console.log(infoEtiquetas);
 
   const modulosUnicos = [...new Set(infoEtiquetas.map((c) => c.modori_desc))];
   const moduloFilters = modulosUnicos.map((modulo) => ({
@@ -120,12 +118,10 @@ const TablaEtiquetas = () => {
     }).then(function (response) {
       response.text().then((resp) => {
         const data = resp;
-        console.log(data);
       });
     });
 
     setActualizarData(!actualizarData);
-
   };
 
   const columns = [
@@ -140,7 +136,7 @@ const TablaEtiquetas = () => {
             key={text}
             style={{ fontWeight: "bold", paddingTop: "2px" }}
           >
-            {text.toUpperCase()}
+            {text?.toUpperCase()}
           </Tag>
         </>
       ),
@@ -159,7 +155,7 @@ const TablaEtiquetas = () => {
             key={text}
             style={{ fontWeight: "bold", paddingTop: "2px" }}
           >
-            {text.toUpperCase()}
+            {text?.toUpperCase()}
           </Tag>
         </>
       ),
@@ -206,11 +202,11 @@ const TablaEtiquetas = () => {
   ];
   const data = infoEtiquetas.map((c) => ({
     key: c.etq_id,
-    etiqueta: c.etq_nombre.toUpperCase(),
-    modulo: c.modori_desc.toUpperCase(),
+    etiqueta: c.etq_nombre?.toUpperCase(),
+    modulo: c.modori_desc?.toUpperCase(),
     etq_color: c.etq_color,
     modori_color: c.modori_color,
-    modori_id:c.modori_id,
+    modori_id: c.modori_id,
   }));
 
   return (
@@ -246,8 +242,6 @@ const TablaEtiquetas = () => {
               Nueva Etiqueta
             </Button>
           </div>
-
-          <Divider style={{ marginTop: "-5px" }} />
 
           {/* TABLA */}
           <Table columns={columns} dataSource={data} size="small" />

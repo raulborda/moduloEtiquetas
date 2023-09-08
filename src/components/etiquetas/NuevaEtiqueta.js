@@ -1,16 +1,47 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
-import { Button, Col, Form, Input, Row, Select } from "antd";
+import { Button, Form, Input, Select } from "antd";
 import "./Style.css";
+
+const colors = [
+  "#117A65",
+  "#9B59B6",
+  "#E74C3C",
+  "#E67E22",
+  "#F1C40F",
+  "#A04000",
+  "#D74561",
+  "#5DC1B9",
+  "#6AB232",
+  "#0351AE",
+  "#8C8C8C",
+  "#CC0099",
+  "#1E91ED",
+  "#808000",
+  "#F78DA7",
+  "#00D084",
+  "#800080",
+  "#FFA500",
+  "#D9FE49",
+  "#C0C0C0",
+  "#000000",
+  "#1ABC9C",
+  "#0aa1fb",
+  "#27AE60",
+  "#6C3483",
+  "#FF7F50",
+  "#C0392B",
+  "#FD7272",
+  "#5D6D7A",
+  "#FDBC57",
+];
 
 const NuevaEtiqueta = () => {
   const URLDOS = process.env.REACT_APP_URL;
 
   const {
-    infoEtiquetas,
-    colorPicker,
-    setColorPicker,
+    idUsu,
     colorError,
     setColorError,
     setIsDrawerNE,
@@ -23,40 +54,13 @@ const NuevaEtiqueta = () => {
     setActualizarData,
   } = useContext(GlobalContext);
 
-  const [form] = Form.useForm();
+  const [etiquetas, setEtiquetas] = useState([]);
 
-  const colors = [
-    "#117A65",
-    "#9B59B6",
-    "#E74C3C",
-    "#E67E22",
-    "#F1C40F",
-    "#A04000",
-    "#D74561",
-    "#5DC1B9",
-    "#6AB232",
-    "#0351AE",
-    "#8C8C8C",
-    "#CC0099",
-    "#1E91ED",
-    "#808000",
-    "#F78DA7",
-    "#00D084",
-    "#800080",
-    "#FFA500",
-    "#D9FE49",
-    "#C0C0C0",
-    "#000000",
-    "#1ABC9C",
-    "#0aa1fb",
-    "#27AE60",
-    "#6C3483",
-    "#FF7F50",
-    "#C0392B",
-    "#FD7272",
-    "#5D6D7A",
-    "#FDBC57",
-  ];
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [colorPicker, setColorPicker] = useState(colors[0]);
+
+  const [form] = Form.useForm();
 
   const handleColorChange = (color) => {
     setColorPicker(color);
@@ -77,15 +81,6 @@ const NuevaEtiqueta = () => {
     }
     var colorEt = colorPicker;
 
-    console.log(
-      "Nombre Etiqueta: ",
-      nameEt,
-      " | Color: ",
-      colorEt,
-      " | Módulo: ",
-      selectEt
-    );
-
     //* FUNCION QUE CARGA LOS DATOS DE UNA NUEVA ETIQUETA
     const data = new FormData();
     data.append("nombreE", nameEt);
@@ -97,7 +92,6 @@ const NuevaEtiqueta = () => {
     }).then(function (response) {
       response.text().then((resp) => {
         const data = resp;
-        console.log(data);
       });
     });
 
@@ -110,7 +104,7 @@ const NuevaEtiqueta = () => {
     setColoresNoUsados([]);
   };
 
-  const modulos = infoEtiquetas.reduce((acc, modulo) => {
+  const modulos = etiquetas.reduce((acc, modulo) => {
     const { modori_id, modori_desc } = modulo;
     if (!acc.find((item) => item.value === modori_id)) {
       acc.push({ value: modori_id, label: modori_desc });
@@ -123,8 +117,8 @@ const NuevaEtiqueta = () => {
   };
 
   useEffect(() => {
-    if (selectedModulo && infoEtiquetas.length > 0) {
-      const coloresUsadosParaModulo = infoEtiquetas
+    if (selectedModulo && etiquetas.length > 0) {
+      const coloresUsadosParaModulo = etiquetas
         .filter((tag) => tag.modori_id === selectedModulo)
         .map((tag) => tag.etq_color);
       const coloresNoUsadosParaModulo = colors.filter(
@@ -135,138 +129,253 @@ const NuevaEtiqueta = () => {
       //   console.log("coloresUsados: ", coloresUsadosParaModulo);
       //   console.log("coloresNoUsados: ", coloresNoUsadosParaModulo);
     }
-  }, [selectedModulo, infoEtiquetas]);
+  }, [selectedModulo, etiquetas]);
 
   useEffect(() => {
     form.resetFields();
   }, [limpieza]);
 
-  const style =
-    selectedModulo !== null
-      ? { marginTop: "190px", marginBottom: "-75px" }
-      : { marginTop: "25px", marginBottom: "-5px" };
+  const cargarEtiquetas = () => {
+    const data = new FormData();
+    data.append("idU", idUsu);
+    fetch(`${URLDOS}selectEtiquetas.php`, {
+      method: "POST",
+      body: data,
+    }).then(function (response) {
+      response.text().then((resp) => {
+        const data = resp;
+        const objetoData = JSON.parse(data);
 
+        setEtiquetas(objetoData);
+        setIsLoading(false); // Establecer isLoading en false después de recibir la respuesta
+      });
+    });
+  };
 
-      const buttonStyle = colorError ? { marginTop: "-350px !important", width: "351px" } : {marginTop: "100px", width: "351px" };
+  useEffect(() => {
+    if (idUsu) {
+      cargarEtiquetas();
+    }
+  }, [idUsu]);
+
+  useEffect(() => {
+    setColorPicker(colors[0]);
+  }, []);
 
   return (
-    <>
-      <div className="divForm">
-        <Form
-          layout="vertical"
-          form={form}
-          onFinish={nuevaEtiqueta}
-          requiredMark={false}
+    <div className="divForm">
+      <Form
+        layout="vertical"
+        form={form}
+        onFinish={nuevaEtiqueta}
+        requiredMark={false}
+      >
+        <Form.Item
+          name="select_modulo"
+          label="Módulo"
+          rules={[
+            {
+              required: true,
+              message: "Debe seleccionar un módulo.",
+            },
+          ]}
         >
-          <Row>
-            <Col xs={19}>
-              <Form.Item
-                name="select_modulo"
-                label="Módulo"
-                rules={[
-                  {
-                    required: true,
-                    message: "Debe seleccionar un módulo.",
-                  },
-                ]}
-              >
-                <Select onChange={handleModuloChange} defaultValue="default">
-                  <Select.Option value="default" disabled>
-                    SELECCIONE MODULO
-                  </Select.Option>
-                  {modulos.map((modulo) => (
-                    <Select.Option key={modulo.value} value={modulo.value}>
-                      {modulo.label}
-                    </Select.Option>
-                  ))}
-                </Select>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={[8, 8]} align="bottom">
-            <Col xs={19}>
-              <Form.Item
-                name="select_color"
-                validateStatus={colorError ? "error" : ""}
-                help={colorError || ""}
-                style={{ marginTop: "-20px" }}
-              >
-                <>
-                  <p className="titleP">Seleccione un color:</p>
-                  <div className="custom-color-picker">
-                    <div className="color-picker-panel">
-                      <div className="color-grid">
-                        {coloresNoUsados.map((color) => (
-                          <div
-                            key={color}
-                            className="color-grid-item"
-                            style={{ backgroundColor: color }}
-                            onClick={() => handleColorChange(color)}
-                          />
-                        ))}
-                      </div>
-                      <div className="error-message">{colorError}</div>
-                      <div
-                        className="selected-color"
-                        style={{ backgroundColor: colorPicker }}
-                      />
-                    </div>
-                  </div>
-                </>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={[8, 8]} align="bottom">
-            <Col xs={19}>
-              <Form.Item
-                name="new_etq_nombre"
-                label="Nombre"
-                rules={[
-                  {
-                    required: true,
-                    message: "Debe ingresar nombre de etiqueta.",
-                  },
-                ]}
-                style={style}
-              >
-                <>
+          <Select
+            onChange={handleModuloChange}
+            placeholder="SELECCIONE UN MODULO"
+          >
+            {modulos.map((modulo) => (
+              <Select.Option key={modulo.value} value={modulo.value}>
+                {modulo.label}
+              </Select.Option>
+            ))}
+          </Select>
+        </Form.Item>
+        <Form.Item
+          name="new_etq_nombre"
+          label="Nombre"
+          rules={[
+            {
+              required: true,
+              message: "Debe ingresar nombre de etiqueta.",
+            },
+          ]}
+        >
+          <div
+            className="tag_wrapper"
+            style={{
+              background: colorPicker,
+              border: "1px solid #e8e8e8",
+            }}
+          >
+            <Input
+              size="small"
+              placeholder=""
+              defaultValue={""}
+              style={{
+                background: "transparent",
+                color: "white",
+                border: "none",
+                outline: "none",
+              }}
+            />
+          </div>
+        </Form.Item>
+        <Form.Item
+          name="select_color"
+          validateStatus={colorError ? "error" : ""}
+          // help={colorError || ""}
+          label="Seleccione un color"
+        >
+          <div className="custom-color-picker">
+            <div className="color-picker-panel">
+              <div className="color-grid">
+                {coloresNoUsados?.map((color) => (
                   <div
-                    className="tag_wrapper"
-                    style={{
-                      background: colorPicker,
-                      width: 280,
-                      border: "1px solid #e8e8e8",
-                      borderRadius: "4px",
-                    }}
-                  >
-                    <Input
-                      placeholder="INGRESE UN NOMBRE"
-                      defaultValue={""}
-                      style={{
-                        background: "transparent",
-                        color: "white",
-                        border: "none",
-                        outline: "none",
-                      }}
-                    />
-                  </div>
-                </>
-              </Form.Item>
-            </Col>
-          </Row>
-          <Row gutter={[8, 8]}>
-              <Button
-                type="primary"
-                htmlType="submit"
-                //style={{ marginTop: "120px", width: "351px" }}
-                style={{ ...buttonStyle }}
-              >
-                GUARDAR
-              </Button>
-          </Row>
-        </Form>
-      </div>
-    </>
+                    key={color}
+                    className="color-grid-item"
+                    style={{ backgroundColor: color }}
+                    onClick={() => handleColorChange(color)}
+                  />
+                ))}
+              </div>
+              <div className="error-message">{colorError}</div>
+              <div
+                className="selected-color"
+                style={{ backgroundColor: colorPicker }}
+              />
+            </div>
+          </div>
+        </Form.Item>
+        <Form.Item>
+          <Button
+            type="primary"
+            htmlType="submit"
+            style={{ width: "100%" }}
+            // style={{ ...buttonStyle }}
+          >
+            GUARDAR
+          </Button>
+        </Form.Item>
+      </Form>
+    </div>
+    // <>
+    //   <div className="divForm">
+    //     <Form
+    //       layout="vertical"
+    //       form={form}
+    //       onFinish={nuevaEtiqueta}
+    //       requiredMark={false}
+    //     >
+    //       <Row>
+    //         <Col xs={19}>
+    //           <Form.Item
+    //             name="select_modulo"
+    //             label="Módulo"
+    //             rules={[
+    //               {
+    //                 required: true,
+    //                 message: "Debe seleccionar un módulo.",
+    //               },
+    //             ]}
+    //           >
+    //             <Select onChange={handleModuloChange} defaultValue="default">
+    //               <Select.Option value="default" disabled>
+    //                 SELECCIONE MODULO
+    //               </Select.Option>
+    //               {modulos.map((modulo) => (
+    //                 <Select.Option key={modulo.value} value={modulo.value}>
+    //                   {modulo.label}
+    //                 </Select.Option>
+    //               ))}
+    //             </Select>
+    //           </Form.Item>
+    //         </Col>
+    //       </Row>
+    //       <Row gutter={[8, 8]} align="bottom">
+    //         <Col xs={19}>
+    //           <Form.Item
+    //             name="select_color"
+    //             validateStatus={colorError ? "error" : ""}
+    //             help={colorError || ""}
+    //             style={{ marginTop: "-20px" }}
+    //           >
+    //             <>
+    //               <p className="titleP">Seleccione un color:</p>
+    //               <div className="custom-color-picker">
+    //                 <div className="color-picker-panel">
+    //                   <div className="color-grid">
+    //                     {coloresNoUsados.map((color) => (
+    //                       <div
+    //                         key={color}
+    //                         className="color-grid-item"
+    //                         style={{ backgroundColor: color }}
+    //                         onClick={() => handleColorChange(color)}
+    //                       />
+    //                     ))}
+    //                   </div>
+    //                   <div className="error-message">{colorError}</div>
+    //                   <div
+    //                     className="selected-color"
+    //                     style={{ backgroundColor: colorPicker }}
+    //                   />
+    //                 </div>
+    //               </div>
+    //             </>
+    //           </Form.Item>
+    //         </Col>
+    //       </Row>
+    //       <Row gutter={[8, 8]} align="bottom">
+    //         <Col xs={19}>
+    //           <Form.Item
+    //             name="new_etq_nombre"
+    //             label="Nombre"
+    //             rules={[
+    //               {
+    //                 required: true,
+    //                 message: "Debe ingresar nombre de etiqueta.",
+    //               },
+    //             ]}
+    //             style={style}
+    //           >
+    //             <>
+    //               <div
+    //                 className="tag_wrapper"
+    //                 style={{
+    //                   background: colorPicker,
+    //                   width: 280,
+    //                   border: "1px solid #e8e8e8",
+    //                   borderRadius: "4px",
+    //                 }}
+    //               >
+    //                 <Input
+    //                   placeholder="INGRESE UN NOMBRE"
+    //                   defaultValue={""}
+    //                   style={{
+    //                     background: "transparent",
+    //                     color: "white",
+    //                     border: "none",
+    //                     outline: "none",
+    //                   }}
+    //                 />
+    //               </div>
+    //             </>
+    //           </Form.Item>
+    //         </Col>
+    //       </Row>
+    //       <Row gutter={[8, 8]}>
+    //         <Button
+    //           type="primary"
+    //           htmlType="submit"
+    //           //style={{ marginTop: "120px", width: "351px" }}
+    //           style={{ ...buttonStyle }}
+    //         >
+    //           GUARDAR
+    //         </Button>
+    //       </Row>
+    //     </Form>
+    //   </div>
+    // </>
   );
 };
 

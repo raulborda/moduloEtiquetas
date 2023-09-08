@@ -24,7 +24,6 @@ const EditarEtiqueta = () => {
     }).then(function (response) {
       response.text().then((resp) => {
         const data = resp;
-        console.log(data);
       });
     });
 

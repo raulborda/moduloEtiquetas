@@ -17,8 +17,6 @@
 }
 
 .color-picker-panel {
-  position: absolute;
-  top: calc(100% + 5px);
   left: 0;
   z-index: 1;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
@@ -70,10 +68,10 @@
 }
 
 .titleP {
-  margin-bottom: -5px;
-  margin-top: 30px;
   color: rgba(0, 0, 0, 0.85);
   font-size: 15px;
+  padding: 0px;
+  margin: 0px;
 }
 
 .error-message {
@@ -87,3 +85,6 @@
   overflow-y: scroll;
 }
 
+.ant-btn {
+  border-radius: 0px !important;
+}
