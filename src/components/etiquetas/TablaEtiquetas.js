@@ -1,5 +1,5 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import "./Style.css";
 import {
   Table,
@@ -30,12 +30,6 @@ const TablaEtiquetas = () => {
     setIsDrawerEE,
     infoEtiquetas,
     setInfoEtiquetas,
-    setColorPicker,
-    setColorError,
-    setSelectedModulo,
-    setColoresNoUsados,
-    limpieza,
-    setLimpieza,
     actualizarData,
     setActualizarData,
     setInfoEditarEtiqueta,
@@ -49,11 +43,7 @@ const TablaEtiquetas = () => {
 
   const closeDrawerNE = () => {
     setIsDrawerNE(false);
-    setColorPicker("");
-    setColorError(null);
-    setSelectedModulo(null);
-    setColoresNoUsados([]);
-    setLimpieza(!limpieza);
+    // setLimpieza(!limpieza);
   };
 
   const showDrawerEE = (record) => {
@@ -67,9 +57,9 @@ const TablaEtiquetas = () => {
   };
 
   const closeIconStyle = {
-    position: "absolute",
-    top: "18px",
-    right: "20px",
+    // position: "absolute",
+    // top: "18px",
+    // right: "20px",
   };
 
   const CustomCloseIcon = ({ onClick }) => (
@@ -252,6 +242,7 @@ const TablaEtiquetas = () => {
             open={isDrawerNE}
             onClose={closeDrawerNE}
             width={400}
+            destroyOnClose
             closeIcon={<CustomCloseIcon />}
           >
             <NuevaEtiqueta />
@@ -260,6 +251,7 @@ const TablaEtiquetas = () => {
             title="Editar Etiqueta"
             open={isDrawerEE}
             onClose={closeDrawerEE}
+            destroyOnClose
             width={300}
             closeIcon={<CustomCloseIcon />}
           >
