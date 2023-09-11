@@ -18,7 +18,7 @@ function App() {
   //State Info tabla etiquetas
   const [infoEtiquetas, setInfoEtiquetas] = useState([]);
 
-  //LOADING para refrescar cuando se crea o edita una etiqueta
+  //Para refrescar cuando se crea o edita una etiqueta
   const [actualizarData, setActualizarData] = useState(false);
 
   //States de Editar Etiqueta

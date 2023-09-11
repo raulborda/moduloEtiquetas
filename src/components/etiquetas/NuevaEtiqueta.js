@@ -1,4 +1,3 @@
-
 import { useContext, useEffect, useState } from "react";
 import { GlobalContext } from "../context/GlobalContext";
 import { Button, Form, Input, Select } from "antd";
@@ -8,12 +7,8 @@ import { colors } from "../utils/colores";
 const NuevaEtiqueta = () => {
   const URLDOS = process.env.REACT_APP_URL;
 
-  const {
-    idUsu,
-    setIsDrawerNE,
-    actualizarData,
-    setActualizarData,
-  } = useContext(GlobalContext);
+  const { idUsu, setIsDrawerNE, actualizarData, setActualizarData } =
+    useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
 
@@ -22,7 +17,7 @@ const NuevaEtiqueta = () => {
   const [etiquetas, setEtiquetas] = useState([]);
 
   const [selectedModulo, setSelectedModulo] = useState(null);
-  
+
   const [colorError, setColorError] = useState(null);
 
   const [coloresNoUsados, setColoresNoUsados] = useState([]);
@@ -40,13 +35,13 @@ const NuevaEtiqueta = () => {
       return;
     }
 
-    var selectEt = value.select_modulo;
+    let selectEt = value.select_modulo;
 
-    var nameEt = value.new_etq_nombre;
+    let nameEt = value.new_etq_nombre;
     if (nameEt === "" || nameEt === undefined || nameEt === null) {
       nameEt = "";
     }
-    var colorEt = colorPicker;
+    let colorEt = colorPicker;
 
     //* FUNCION QUE CARGA LOS DATOS DE UNA NUEVA ETIQUETA
     const data = new FormData();
@@ -62,13 +57,8 @@ const NuevaEtiqueta = () => {
       });
     });
 
-    setColorPicker("");
-    form.resetFields();
-    nameEt = "";
-    setIsDrawerNE(false);
     setActualizarData(!actualizarData);
-    setSelectedModulo(null);
-    setColoresNoUsados([]);
+    setIsDrawerNE(false);
   };
 
   const modulos = etiquetas.reduce((acc, modulo) => {
@@ -94,10 +84,6 @@ const NuevaEtiqueta = () => {
       setColoresNoUsados(coloresNoUsadosParaModulo);
     }
   }, [selectedModulo, etiquetas]);
-
-  // useEffect(() => {
-  //   form.resetFields();
-  // }, [limpieza]);
 
   const cargarEtiquetas = () => {
     const data = new FormData();
@@ -188,7 +174,6 @@ const NuevaEtiqueta = () => {
         <Form.Item
           name="select_color"
           validateStatus={colorError ? "error" : ""}
-          // help={colorError || ""}
           label="Seleccione un color"
         >
           <div className="custom-color-picker">

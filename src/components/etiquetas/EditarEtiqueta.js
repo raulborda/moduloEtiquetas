@@ -17,8 +17,6 @@ const EditarEtiqueta = () => {
   const [form] = Form.useForm();
 
   const onFinish = (value) => {
-    //console.log("VALORES A ENVIAR PARA UPDATE: ", infoEditarEtiqueta.key, " | ", value.etq_nombre);
-
     //* FUNCION PARA EDITAR LOS DATOS DE UNA ETIQUETA
     const data = new FormData();
     data.append("nombreE", value.etq_nombre);
@@ -32,10 +30,10 @@ const EditarEtiqueta = () => {
       });
     });
 
-    setIsDrawerEE(false);
+    setActualizarData(!actualizarData);
     form.resetFields();
     setInfoEditarEtiqueta(null);
-    setActualizarData(!actualizarData);
+    setIsDrawerEE(false);
   };
 
   return (

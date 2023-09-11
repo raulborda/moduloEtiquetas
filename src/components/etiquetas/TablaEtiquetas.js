@@ -1,15 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import "./Style.css";
-import {
-  Table,
-  Space,
-  Tag,
-  Button,
-  Drawer,
-  Spin,
-  Popconfirm,
-} from "antd";
+import { Table, Space, Tag, Button, Drawer, Spin, Popconfirm } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -79,6 +71,8 @@ const TablaEtiquetas = () => {
         const data = resp;
         const objetoData = JSON.parse(data);
 
+        objetoData.sort((a, b) => b.etq_id - a.etq_id);
+
         setInfoEtiquetas(objetoData);
         setIsLoading(false); // Establecer isLoading en false después de recibir la respuesta
       });
@@ -89,7 +83,7 @@ const TablaEtiquetas = () => {
     if (idUsu) {
       cargarTablaEtiqueta();
     }
-  }, [idUsu, isLoading, actualizarData]);
+  }, [idUsu, actualizarData]);
 
   const modulosUnicos = [...new Set(infoEtiquetas.map((c) => c.modori_desc))];
   const moduloFilters = modulosUnicos.map((modulo) => ({
@@ -98,7 +92,6 @@ const TablaEtiquetas = () => {
   }));
 
   const eliminarEtiqueta = (etiqueta) => {
-    //console.log("Se elimino etiqueta: ", etiqueta);
     const data = new FormData();
     data.append("idE", etiqueta.key);
     data.append("idM", etiqueta.modori_id);
@@ -120,15 +113,13 @@ const TablaEtiquetas = () => {
       dataIndex: "etiqueta",
       key: "etiqueta",
       render: (text, record) => (
-        <>
-          <Tag
-            color={record.etq_color}
-            key={text}
-            style={{ fontWeight: "bold", paddingTop: "2px" }}
-          >
-            {text?.toUpperCase()}
-          </Tag>
-        </>
+        <Tag
+          color={record.etq_color}
+          key={text}
+          style={{ fontWeight: "bold", paddingTop: "2px" }}
+        >
+          {text?.toUpperCase()}
+        </Tag>
       ),
     },
     {
@@ -139,15 +130,13 @@ const TablaEtiquetas = () => {
       filters: moduloFilters,
       onFilter: (value, record) => record.modulo === value,
       render: (text, record) => (
-        <>
-          <Tag
-            color={record.modori_color}
-            key={text}
-            style={{ fontWeight: "bold", paddingTop: "2px" }}
-          >
-            {text?.toUpperCase()}
-          </Tag>
-        </>
+        <Tag
+          color={record.modori_color}
+          key={text}
+          style={{ fontWeight: "bold", paddingTop: "2px" }}
+        >
+          {text?.toUpperCase()}
+        </Tag>
       ),
     },
     {
@@ -162,9 +151,15 @@ const TablaEtiquetas = () => {
           />
 
           <Popconfirm
-            style={{ width: 200 }}
             title={
-              <div style={{ display: "flex", flexDirection: "column" }}>
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  width: 250,
+                  gap: 4,
+                }}
+              >
                 <label>¿Deseas eliminar esta nota?</label>
                 <div style={{ marginLeft: "-22px" }}>
                   <InfoCircleOutlined
@@ -172,7 +167,7 @@ const TablaEtiquetas = () => {
                   />
                   <span style={{ color: "red", fontWeight: "500" }}>
                     Si la etiqueta se encuentra asociada a algún objeto se
-                    eliminará la asociación
+                    eliminará la asociación.
                   </span>
                 </div>
               </div>
@@ -190,14 +185,6 @@ const TablaEtiquetas = () => {
       ),
     },
   ];
-  const data = infoEtiquetas.map((c) => ({
-    key: c.etq_id,
-    etiqueta: c.etq_nombre?.toUpperCase(),
-    modulo: c.modori_desc?.toUpperCase(),
-    etq_color: c.etq_color,
-    modori_color: c.modori_color,
-    modori_id: c.modori_id,
-  }));
 
   return (
     <>
@@ -234,7 +221,18 @@ const TablaEtiquetas = () => {
           </div>
 
           {/* TABLA */}
-          <Table columns={columns} dataSource={data} size="small" />
+          <Table
+            columns={columns}
+            dataSource={[...infoEtiquetas].map((c) => ({
+              key: c.etq_id,
+              etiqueta: c.etq_nombre?.toUpperCase(),
+              modulo: c.modori_desc?.toUpperCase(),
+              etq_color: c.etq_color,
+              modori_color: c.modori_color,
+              modori_id: c.modori_id,
+            }))}
+            size="small"
+          />
 
           {/* DRAWERS */}
           <Drawer
