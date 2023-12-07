@@ -1,15 +1,18 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useContext, useEffect, useState } from "react";
 import "./Style.css";
-import { Table, Space, Tag, Button, Drawer, Spin, Popconfirm } from "antd";
+import { Table, Space, /*Tag,*/ Button, Drawer, Spin, Popconfirm } from "antd";
 import {
   DeleteOutlined,
   EditOutlined,
   InfoCircleOutlined,
+  CloseOutlined
 } from "@ant-design/icons";
 import NuevaEtiqueta from "./NuevaEtiqueta";
 import EditarEtiqueta from "./EditarEtiqueta";
 import { GlobalContext } from "../context/GlobalContext";
+import { Tag } from "../utils/CardBrightness";
+import FormGrupo from "../grupos/FormGrupo";
 
 const TablaEtiquetas = () => {
   const URLDOS = process.env.REACT_APP_URL;
@@ -25,9 +28,17 @@ const TablaEtiquetas = () => {
     actualizarData,
     setActualizarData,
     setInfoEditarEtiqueta,
+    drawerGrupo, setDrawerGrupo
   } = useContext(GlobalContext);
 
   const [isLoading, setIsLoading] = useState(true);
+
+  //Grupos de etiquetas
+  const [dataGrupos, setDataGrupos] = useState();
+  const [nuevoGrupoLabel, setNuevoGrupoLabel] = useState(true);
+  const [grupo, setGrupo] = useState(0);
+
+
 
   const showDrawerNE = () => {
     setIsDrawerNE(true);
@@ -48,17 +59,26 @@ const TablaEtiquetas = () => {
     setInfoEditarEtiqueta(null);
   };
 
-  const closeIconStyle = {
-    // position: "absolute",
-    // top: "18px",
-    // right: "20px",
-  };
 
-  const CustomCloseIcon = ({ onClick }) => (
-    <div style={closeIconStyle} onClick={onClick}>
-      X
+  const CustomCloseIcon = () => (
+    <div className="drawer-close-icon">
+      <CloseOutlined />
     </div>
   );
+
+  const fetchDataGrupos = async () => {
+
+    const dataForm = new FormData();
+
+    const requestOptions = {
+      method: 'POST',
+      body: dataForm
+    };
+    const data = await fetch(`${URLDOS}gruposEtiquetas.php`, requestOptions);
+    const jsonData = await data.json();
+    setDataGrupos(jsonData);
+    //console.log('dataGrupos', jsonData)
+  };
 
   const cargarTablaEtiqueta = () => {
     const data = new FormData();
@@ -74,6 +94,7 @@ const TablaEtiquetas = () => {
         objetoData.sort((a, b) => b.etq_id - a.etq_id);
 
         setInfoEtiquetas(objetoData);
+        //console.log(objetoData)
         setIsLoading(false); // Establecer isLoading en false después de recibir la respuesta
       });
     });
@@ -81,6 +102,7 @@ const TablaEtiquetas = () => {
 
   useEffect(() => {
     if (idUsu) {
+      fetchDataGrupos();
       cargarTablaEtiqueta();
     }
   }, [idUsu, actualizarData]);
@@ -107,19 +129,99 @@ const TablaEtiquetas = () => {
     setActualizarData(!actualizarData);
   };
 
+
+  const eliminarGrupo = async (grupo) => {
+
+    const data = new FormData();
+    data.append("idGrupoE", grupo.key);
+
+    const requestOptions = {
+        method: 'POST',
+        body: data
+    };
+
+    const response = await fetch(`${URLDOS}etiquetas_eliminarGrupo.php`, requestOptions);
+    console.log(response)
+    setActualizarData(!actualizarData);
+};
+
+
+
+
   const columns = [
+    {
+      title: 'Grupo',
+      dataIndex: 'nombreGrupo',
+      key: 'nombreGrupo',
+    },
+    {
+      title: 'Cantidad',
+      //dataIndex: 'cantidad',
+      align: "center",
+      key: 'cantidad',
+      render: (text, record) => (
+        <div style={{ cursor: "default" }}>{infoEtiquetas?.filter((etiqueta) => etiqueta.idGrupoE === record.key).length > 0 ? infoEtiquetas?.filter((etiqueta) => etiqueta.idGrupoE === record.key).length : 0}
+        </div>
+      ),
+    },
+    {
+      title: "...",
+      key: "acciones",
+      align: "center",
+      render: (fila) => {
+        return (
+          <>
+            {fila.key ? <Space size="middle">
+              <EditOutlined onClick={() => seleccionarGrupo(fila, 'editar')} />
+
+              <Popconfirm
+                title={
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      width: 250,
+                      gap: 4,
+                    }}
+                  >
+                    <label>¿Deseas eliminar este grupo?</label>
+                    <div style={{ marginLeft: "-22px" }}>
+                      <InfoCircleOutlined
+                        style={{ color: "red", marginRight: "9px" }}
+                      />
+                      <span style={{ color: "red", fontWeight: "500" }}>
+                        Solo se eliminará el grupo, todas las etiquetas que este contiene pasarán a 'Sin asignar'.
+                      </span>
+                    </div>
+                  </div>
+                }
+                okText="Borrar"
+                cancelText="Cerrar"
+                onConfirm={() => eliminarGrupo(fila)}
+                placement="left"
+              >
+                <Button type="link" style={{ padding: "0px", margin: "0px" }}>
+                  <DeleteOutlined style={{ color: "black" }} />
+                </Button>
+              </Popconfirm>
+            </Space> : ''}
+
+          </>
+        );
+      },
+    }
+  ]
+
+
+  const childColumns = [
     {
       title: "Etiqueta",
       dataIndex: "etiqueta",
       key: "etiqueta",
       render: (text, record) => (
-        <Tag
-          color={record.etq_color}
-          key={text}
-          style={{ fontWeight: "bold", paddingTop: "2px" }}
-        >
-          {text?.toUpperCase()}
-        </Tag>
+        <div style={{ cursor: "default" }}>
+          <Tag hex={record?.etq_color} nombre={text?.toUpperCase()} />
+        </div>
       ),
     },
     {
@@ -130,13 +232,9 @@ const TablaEtiquetas = () => {
       filters: moduloFilters,
       onFilter: (value, record) => record.modulo === value,
       render: (text, record) => (
-        <Tag
-          color={record.modori_color}
-          key={text}
-          style={{ fontWeight: "bold", paddingTop: "2px" }}
-        >
-          {text?.toUpperCase()}
-        </Tag>
+        <div style={{ display: "flex", justifyContent: "center", cursor: "default" }} >
+          <Tag hex={record?.modori_color} nombre={text?.toUpperCase()} />
+        </div>
       ),
     },
     {
@@ -160,7 +258,7 @@ const TablaEtiquetas = () => {
                   gap: 4,
                 }}
               >
-                <label>¿Deseas eliminar esta nota?</label>
+                <label>¿Deseas eliminar esta etiqueta?</label>
                 <div style={{ marginLeft: "-22px" }}>
                   <InfoCircleOutlined
                     style={{ color: "red", marginRight: "9px" }}
@@ -177,7 +275,7 @@ const TablaEtiquetas = () => {
             onConfirm={() => eliminarEtiqueta(record)}
             placement="left"
           >
-            <Button type="link">
+            <Button type="link" style={{ padding: "0px", margin: "0px" }}>
               <DeleteOutlined style={{ color: "red" }} />
             </Button>
           </Popconfirm>
@@ -185,6 +283,36 @@ const TablaEtiquetas = () => {
       ),
     },
   ];
+
+
+  //Asigna el valor de la fila al presionar editar
+  const seleccionarGrupo = (fila, accion) => {
+
+    if (accion === 'crear') {
+      setGrupo(null);
+      setNuevoGrupoLabel(true);
+      setDrawerGrupo(true);
+      return;
+    };
+    //console.log('fila',fila)
+    setGrupo(fila);
+    if (accion === 'editar') {
+      setNuevoGrupoLabel(false);
+      setDrawerGrupo(true);
+    };
+    // if (accion === 'verDetalle') {
+    //     setOpen(true);
+    //     fetchEtiquetasxContactos(fila.key);
+    // };
+    // if (accion == 'clientesAsoc') {
+    //     setOpenClientes(true);
+    //     fetchDataClientesAsoc(fila.key);
+    // };
+    // if (accion === 'etiqueta') {
+    //     setDrawerEtiquetas(true);
+    //     fetchEtiquetasxContactos(fila.key);
+    // };
+  };
 
   return (
     <>
@@ -211,28 +339,61 @@ const TablaEtiquetas = () => {
             }}
           >
             <h1 className="titulos">ETIQUETAS</h1>
-            <Button
-              type="primary"
-              style={{ width: "110px", padding: "0px", marginLeft: "10px" }}
-              onClick={showDrawerNE}
-            >
-              Nueva Etiqueta
-            </Button>
+            <div style={{ display: "flex", gap: "8px" }}>
+              <Button
+                type="primary"
+                //style={{ padding: "0px", marginLeft: "10px" }}
+                onClick={() => seleccionarGrupo('crear', 'crear')}
+              >
+                NUEVO GRUPO
+              </Button>
+              <Button
+                type="primary"
+                //style={{ padding: "0px", marginLeft: "10px" }}
+                onClick={showDrawerNE}
+              >
+                NUEVA ETIQUETA
+              </Button>
+            </div>
+
           </div>
 
-          {/* TABLA */}
+
+          {/* TABLA NUEVA */}
           <Table
             columns={columns}
-            dataSource={[...infoEtiquetas].map((c) => ({
-              key: c.etq_id,
-              etiqueta: c.etq_nombre?.toUpperCase(),
-              modulo: c.modori_desc?.toUpperCase(),
-              etq_color: c.etq_color,
-              modori_color: c.modori_color,
-              modori_id: c.modori_id,
-            }))}
-            size="small"
+            expandable={{
+              expandedRowRender: (record) => {
+                //if (record.key == 1){
+                return (
+                  <Table
+                    columns={childColumns}
+
+                    dataSource={
+                      (infoEtiquetas.filter((c) => c.idGrupoE == record.key)).map((c) => ({
+                        key: c.etq_id,
+                        etiqueta: c.etq_nombre?.toUpperCase(),
+                        modulo: c.modori_desc?.toUpperCase(),
+                        etq_color: c.etq_color,
+                        modori_color: c.modori_color,
+                        modori_id: c.modori_id,
+                      }))
+                    }
+                    pagination={{
+                      defaultPageSize: 5
+                    }}
+
+                  />
+                );
+                //}
+              },
+              defaultExpandedRowKeys: ['0'],
+            }}
+            dataSource={dataGrupos}
+
           />
+
+
 
           {/* DRAWERS */}
           <Drawer
@@ -250,10 +411,23 @@ const TablaEtiquetas = () => {
             open={isDrawerEE}
             onClose={closeDrawerEE}
             destroyOnClose
-            width={300}
+            width={400}
             closeIcon={<CustomCloseIcon />}
           >
             <EditarEtiqueta />
+          </Drawer>
+
+
+
+          <Drawer
+            title={nuevoGrupoLabel ? "Nuevo Grupo" : "Editar Grupo"}
+            open={drawerGrupo}
+            onClose={() => setDrawerGrupo(false)}
+            width={400}
+            closeIcon={<CustomCloseIcon />}
+            destroyOnClose={true}
+          >
+            <FormGrupo editarGrupoValues={grupo} etiquetasGrupo={infoEtiquetas} />
           </Drawer>
         </div>
       )}

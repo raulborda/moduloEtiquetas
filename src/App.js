@@ -24,6 +24,9 @@ function App() {
   //States de Editar Etiqueta
   const [infoEditarEtiqueta, setInfoEditarEtiqueta] = useState(null);
 
+  //Grupos de etiquetas
+  const [drawerGrupo, setDrawerGrupo] = useState(false);
+
   return (
     <GlobalContext.Provider
       value={{
@@ -33,6 +36,7 @@ function App() {
         infoEtiquetas, setInfoEtiquetas,
         actualizarData, setActualizarData,
         infoEditarEtiqueta, setInfoEditarEtiqueta,
+        drawerGrupo, setDrawerGrupo
       }}
     >
       <ConfigProvider

@@ -1,8 +1,8 @@
 .div_wrapper {
   height: 100%;
   width: auto;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding-left: 8px;
+  padding-right: 8px;
 }
 
 .titulos {
@@ -87,4 +87,24 @@
 
 .ant-btn {
   border-radius: 0px !important;
+}
+
+.tag-custom {
+  box-sizing: border-box;
+  font-size: 12px;
+  display: flex;
+  padding: 0px 7px;
+  border-radius: 4px;
+  border-width: 1px;
+  border-style: solid;
+  font-weight: 500;
+  width: fit-content;
+  max-width: 100%;
+}
+
+/*Boton cerrar drawer agregar y editar*/
+.drawer-close-icon {
+  position: absolute;
+  top: 20px;
+  right: 20px;
 }

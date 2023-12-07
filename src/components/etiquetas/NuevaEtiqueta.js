@@ -3,6 +3,7 @@ import { GlobalContext } from "../context/GlobalContext";
 import { Button, Form, Input, Select } from "antd";
 import "./Style.css";
 import { colors } from "../utils/colores";
+import { Tag } from "../utils/CardBrightness";
 
 const NuevaEtiqueta = () => {
   const URLDOS = process.env.REACT_APP_URL;
@@ -24,12 +25,25 @@ const NuevaEtiqueta = () => {
 
   const [form] = Form.useForm();
 
+  const [dataGrupos, setDataGrupos] = useState();
+  const [grupo, setGrupo] = useState({
+    idGrupoE: "",
+  });
+
+  const fetchDataGrupos = async () => {
+    const data = await fetch(`${URLDOS}etiquetas_selectGrupos.php`);
+    const jsonData = await data.json();
+    setDataGrupos(jsonData);
+    console.log('jsonData', jsonData)
+  }
+
   const handleColorChange = (color) => {
     setColorPicker(color);
     setColorError(null);
   };
 
   const nuevaEtiqueta = (value) => {
+    console.log('value',value)
     if (!colorPicker) {
       setColorError("Debe seleccionar un color.");
       return;
@@ -37,7 +51,7 @@ const NuevaEtiqueta = () => {
 
     let selectEt = value.select_modulo;
 
-    let nameEt = value.new_etq_nombre;
+    let nameEt = value.etq_nombre;
     if (nameEt === "" || nameEt === undefined || nameEt === null) {
       nameEt = "";
     }
@@ -48,6 +62,8 @@ const NuevaEtiqueta = () => {
     data.append("nombreE", nameEt);
     data.append("colorE", colorEt);
     data.append("moduloE", selectEt);
+    data.append("idGrupoE",value.idGrupoE ? value.idGrupoE : null);
+
     fetch(`${URLDOS}nuevaEtiqueta.php`, {
       method: "POST",
       body: data,
@@ -110,6 +126,7 @@ const NuevaEtiqueta = () => {
 
   useEffect(() => {
     setColorPicker(colors[0]);
+    fetchDataGrupos();
   }, []);
 
   return (
@@ -132,7 +149,7 @@ const NuevaEtiqueta = () => {
         >
           <Select
             onChange={handleModuloChange}
-            placeholder="SELECCIONE UN MODULO"
+            placeholder="Seleccione un módulo"
           >
             {modulos.map((modulo) => (
               <Select.Option key={modulo.value} value={modulo.value}>
@@ -141,36 +158,21 @@ const NuevaEtiqueta = () => {
             ))}
           </Select>
         </Form.Item>
-        <Form.Item
-          name="new_etq_nombre"
-          label="Nombre"
-          rules={[
-            {
-              required: true,
-              message: "Debe ingresar nombre de etiqueta.",
-            },
-          ]}
-        >
-          <div
-            className="tag_wrapper"
-            style={{
-              background: colorPicker,
-              border: "1px solid #e8e8e8",
-            }}
-          >
-            <Input
-              size="small"
-              placeholder=""
-              defaultValue={""}
-              style={{
-                background: "transparent",
-                color: "white",
-                border: "none",
-                outline: "none",
-              }}
-            />
-          </div>
+
+        <Form.Item name="idGrupoE" label="Grupo" >
+          <Select
+            showSearch
+            placeholder="Seleccione un grupo"
+            optionFilterProp="children"
+            filterOption={(input, option) => (option?.label ?? '').includes(input.toUpperCase().trim())}
+            options={dataGrupos}
+            onChange={(e) => setGrupo(prev => ({ ...prev, idGrupoE: e }))}
+            name="idGrupoE"
+          />
         </Form.Item>
+
+        <Tag hex={colorPicker} tipo={'agregar'} />
+        {/* </Form.Item> */}
         <Form.Item
           name="select_color"
           validateStatus={colorError ? "error" : ""}
@@ -202,7 +204,7 @@ const NuevaEtiqueta = () => {
           </Button>
         </Form.Item>
       </Form>
-    </div>
+    </div >
   );
 };
 

@@ -1,0 +1,16 @@
+.ant-select-selector-drawer {
+    width: 100% !important;
+    border-color: transparent !important;
+}
+
+
+/*Listado estiquetas*/
+.selected-tags {
+    position: relative;
+    display: flex;
+    flex: auto;
+    flex-wrap: wrap;
+    max-width: 90%;
+    gap: 8px;
+    cursor: default;
+}
